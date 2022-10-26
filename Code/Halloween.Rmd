@@ -1,0 +1,50 @@
+---
+title: "Problem Set 2"
+output: html_notebook
+---
+
+First, I will set up my workspace
+```{r}
+rm(list = ls())
+library(here)
+library(ggplot2)
+library(tidyverse)
+```
+
+Now, I will read my data into my workspace
+```{r}
+DF <- read.csv(here("Data", "Halloween_data_PS2.csv"))
+```
+
+Now I want to get a quick idea of the varialbes/variable types in my dataset
+```{r}
+glimpse(DF) #I can see that Costume and Type are both listed as character variables, I will change them to factors
+```
+
+I will change Costume and Type to factors
+```{r}
+DF$Costume <- as.factor(DF$Costume)  #convert character column to factor
+
+DF$Type <- as.factor(DF$Type)
+
+class(DF$Costume)
+class(DF$Type) #both the Costume and Type variables have been converted to factors!
+```
+
+
+Now, I want to look a little closer at my dataset. 
+```{r}
+str(DF) #I can see that there are 15 levels in the Costume variable, and 4 levels in the Type variable
+```
+
+Let's see what the levels of Costume are
+```{r}
+levels(DF$Costume) #Hmm, I see some duplicate entries (eg different capitalizations of Wonder woman, Wonder Woman, and wonder woman). R thinks these are different things
+```
+
+Now I will fix the data entries so the format for spelling/capitalization is consistent for each level
+```{r}
+
+```
+
+
