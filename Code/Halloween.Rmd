@@ -44,7 +44,102 @@ levels(DF$Costume) #Hmm, I see some duplicate entries (eg different capitalizati
 
 Now I will fix the data entries so the format for spelling/capitalization is consistent for each level
 ```{r}
+#first I will fix the clowns
+fix <- which(DF$Costume == "creepy clown" | DF$Costume == "clown") #tell R that "creepy clown" and "clown" are wrong
+
+DF$Costume[fix]<- "Creepy clown" #assign the wrong versions to "Creepy clown"
+```
+
+```{r}
+#now I will fix the witches
+repair <- which(DF$Costume == "Witch" | DF$Costume == "witch ") #tell R that "Witch" and "witch " (space after the word) are wrong
+
+DF$Costume[repair]<- "witch" #assign the wrong versions to "witch"
+```
+
+```{r}
+#lastly, I will fix the Wonder Woman entries
+better <- which(DF$Costume == "Wonder woman" | DF$Costume == "wonder woman") #tell R that "Wonder woman" and "wonder woman" are wrong
+
+DF$Costume[better]<- "Wonder Woman" #assign the wrong versions to "Wonder Woman"
+```
+
+Now I want to check how many levels are in Costume to make sure my data repair steps worked
+```{r}
+unique(DF$Costume) #I can see that my repairs worked (even though R still "remembers" the old versions)
+```
+
+
+Let's check the levels of Type as well
+```{r}
+levels(DF$Type) #Looks like there's some mistakes
+```
+
+Now I will fix the capitalization issues in the Type variablce
+```{r}
+good <- which(DF$Type == "scary" | DF$Type == "scary ") #tell R that "scary" and "scary " are wrong
+
+DF$Type[good]<- "Scary" #assin the wrong versions to "Scary"
+```
+
+And now I'll check to make sure my fix worked
+```{r}
+unique(DF$Type) #looks good! 
+```
+
+
+Now I want to calculate the mean age of trick-or-treaters and mean number of pieces of candy taken by Costume and Type 
+```{r}
+By_type <- DF %>% 
+  group_by(Costume, Type) %>%
+  summarize(num_pieces = mean(candy_pieces, na.rm = T),
+            mean_age = mean(age, na.rm = T)) 
+#I'm choosing to omit the NA's from the calculation so I can calculate means
+```
+
+Now I want to create a figure from this summarized dataset (that replicated Figure 1)
+```{r}
+#I will make a scatterplot
+ggplot(By_type, aes(x = mean_age, y = num_pieces, 
+                    color = Type)) +
+  geom_point() +
+  xlab("Mean age of kid (years)") +
+  ylab("Mean number pieces taken") +
+  theme_bw() +
+  labs(caption = "Figure 1. Mean number of pieces of candy taken as a function of age of trick-or-treater and costume type (Red dots = costumes 
+that are not scary; blue dots = scary costumes).") +
+  theme(plot.caption = element_text(hjust = 0))
+```
+
+Next I will write code that isolates the data for children in “not scary” costumes who are 10 years old or younger
+```{r}
+Not_scary <- DF %>%
+  filter(Type == "Not scary") %>%
+  filter(age <= 10)
+```
+
+Now I will use the filtered data from above to plot a histogram showing the number of kids in each age class (replicating Figure 2)
+```{r}
+ggplot(Not_scary, aes(x = age)) +
+  geom_histogram(bins = 4) +
+  xlab("Age of child") +
+  ylab("Number") +
+  labs(caption = "Figure 2. Number of children age 10 and under wearing costumes that are not scary.") +
+  theme(plot.caption = element_text(hjust = 0))
 
 ```
+
+
+Next, I will write code that replicates figure 3 
+```{r}
+ggplot(DF, aes(x = Costume, y = age)) +
+  geom_boxplot() +
+  geom_point(size = 4, color = 'lightgrey', alpha = 0.7) + 
+  facet_wrap(~ Type, ncol = 2) +
+  xlab("Child age (years)") +
+  ylab("Costume choice") +
+  coord_flip()
+```
+
 
 
