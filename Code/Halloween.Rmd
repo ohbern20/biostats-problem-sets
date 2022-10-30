@@ -13,33 +13,23 @@ library(tidyverse)
 
 Now, I will read my data into my workspace
 ```{r}
-DF <- read.csv(here("Data", "Halloween_data_PS2.csv"))
+DF <- read.csv(here("Data", "Halloween_data_PS2.csv"), stringsAsFactors = TRUE) #make sure the character data imports as a factor
 ```
 
-Now I want to get a quick idea of the varialbes/variable types in my dataset
+Now I want to get a quick idea of the variables/variable types in my dataset
 ```{r}
-glimpse(DF) #I can see that Costume and Type are both listed as character variables, I will change them to factors
-```
-
-I will change Costume and Type to factors
-```{r}
-DF$Costume <- as.factor(DF$Costume)  #convert character column to factor
-
-DF$Type <- as.factor(DF$Type)
-
-class(DF$Costume)
-class(DF$Type) #both the Costume and Type variables have been converted to factors!
+glimpse(DF) #I can see that Costume and Type are both listed as factor data, which means my import method worked 
 ```
 
 
-Now, I want to look a little closer at my dataset. 
+Now, I want to look at my dataset using a different function that tells me the levels of the Costume and Type variables. 
 ```{r}
 str(DF) #I can see that there are 15 levels in the Costume variable, and 4 levels in the Type variable
 ```
 
 Let's see what the levels of Costume are
 ```{r}
-levels(DF$Costume) #Hmm, I see some duplicate entries (eg different capitalizations of Wonder woman, Wonder Woman, and wonder woman). R thinks these are different things
+levels(DF$Costume) #Hmm, I see some duplicate entries (eg different capitalization of Wonder woman, Wonder Woman, and wonder woman). R thinks these are three different costumes
 ```
 
 Now I will fix the data entries so the format for spelling/capitalization is consistent for each level
@@ -75,7 +65,7 @@ Let's check the levels of Type as well
 levels(DF$Type) #Looks like there's some mistakes
 ```
 
-Now I will fix the capitalization issues in the Type variablce
+Now I will fix the capitalization issues in the Type variable
 ```{r}
 good <- which(DF$Type == "scary" | DF$Type == "scary ") #tell R that "scary" and "scary " are wrong
 
@@ -94,10 +84,10 @@ By_type <- DF %>%
   group_by(Costume, Type) %>%
   summarize(num_pieces = mean(candy_pieces, na.rm = T),
             mean_age = mean(age, na.rm = T)) 
-#I'm choosing to omit the NA's from the calculation so I can calculate means
+#I'm choosing to ignore the NA's in the calculation so I can calculate means
 ```
 
-Now I want to create a figure from this summarized dataset (that replicated Figure 1)
+Now I want to create a figure from this summarized dataset (that replicates Figure 1)
 ```{r}
 #I will make a scatterplot
 ggplot(By_type, aes(x = mean_age, y = num_pieces, 
@@ -138,7 +128,7 @@ ggplot(DF, aes(x = Costume, y = age)) +
   facet_wrap(~ Type, ncol = 2) +
   xlab("Child age (years)") +
   ylab("Costume choice") +
-  coord_flip()
+  coord_flip() 
 ```
 
 
