@@ -76,7 +76,7 @@ And now I'll check to make sure my fix worked
 ```{r}
 unique(DF$Type) #looks good! 
 ```
-
+At th is point you may want to run `factor` on both Costume and Type to re-level them.
 
 Now I want to calculate the mean age of trick-or-treaters and mean number of pieces of candy taken by Costume and Type 
 ```{r}
@@ -86,6 +86,7 @@ By_type <- DF %>%
             mean_age = mean(age, na.rm = T)) 
 #I'm choosing to ignore the NA's in the calculation so I can calculate means
 ```
+Good on na.rm = T!
 
 Now I want to create a figure from this summarized dataset (that replicates Figure 1)
 ```{r}
@@ -130,6 +131,6 @@ ggplot(DF, aes(x = Costume, y = age)) +
   ylab("Costume choice") +
   coord_flip() 
 ```
-
+Nice work overall!
 
 
